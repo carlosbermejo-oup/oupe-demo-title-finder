@@ -1,0 +1,23 @@
+{
+  "name": "oupe-demo-title-finder",
+  "version": "1.0.0",
+  "description": "Node project created to generate a file containing information about the demo titles contained in the dev, pre and pro environments needed to test the Promotion to title development in Oxford Premium.",
+  "author": "Carlos Bermejo Pérez",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "jest",
+    "test:dev": "jest --watch"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "jest": "^27.4.3"
+  }
+}
