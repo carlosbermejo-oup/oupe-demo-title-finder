@@ -1,3 +1,3 @@
-import isAlfrescoUp  from "./verifyConnection";
+import isAlfrescoUp  from "./verifyConnection.js";
 
 console.log(isAlfrescoUp());

@@ -18,6 +18,15 @@ describe("verifyConnection", () => {
       expect(actual).toBe(true);
     });
 
+    it("should return false if the Alfresco instance is down", async () => {
+      axios.get.mockResolvedValue({
+        status: 404,
+      });
+
+      const actual = await isAlfrescoUp();
+      expect(actual).toBe(false);
+    });
+
     it("should throw an error if the Alfresco health check cannot be performed", async () => {
       axios.get.mockImplementation(() => {
         throw new Error("getaddrinfo ENOTFOUND api.oxfordpremium.fake.oupe.es");
