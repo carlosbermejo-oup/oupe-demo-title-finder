@@ -1,6 +1,6 @@
 import { manageArgumentVariables } from "./manageArgumentVariables.js";
 import path from "path";
-import fs from "fs";
+import fse from "../../utils/fsExtra.cjs";
 import dirname from "../../utils/dirname.cjs";
 import { setupConfigurationCli } from "./setupConfigurationCli.js";
 
@@ -12,11 +12,10 @@ export const setAppEnvironment = async () => {
 
 export const readEnvironmentFiles = () => {
   try {
-    const configParsed = JSON.parse(
-      fs.readFileSync(
-        path.resolve(dirname, `../config/${process.env.NODE_CONFIG_ENV}.json`)
-      )
+    const configParsed = fse.readJSONSync(
+      path.resolve(dirname, `../config/${process.env.NODE_CONFIG_ENV}.json`)
     );
+    console.log(configParsed);
     global.ENV_SETTINGS = configParsed;
   } catch (e) {
     throw new Error(e);
