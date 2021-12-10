@@ -1,11 +1,30 @@
 import { manageArgumentVariables } from "./manageArgumentVariables.js";
 import path from "path";
 import fs from "fs";
-import dirname from "./dirname.cjs";
+import dirname from "../../utils/dirname.cjs";
+import { setupConfigurationCli } from "./setupConfigurationCli.js";
 
-export const setAppEnvironment = () => {
+export const setAppEnvironment = async () => {
   const appEnvironment = manageArgumentVariables();
-  switch (appEnvironment.env) {
+  await setupConfigurationCli(appEnvironment);
+  setConfigEnvironmentVariable(global.environment);
+};
+
+export const readEnvironmentFiles = () => {
+  try {
+    const configParsed = JSON.parse(
+      fs.readFileSync(
+        path.resolve(dirname, `../config/${process.env.NODE_CONFIG_ENV}.json`)
+      )
+    );
+    global.ENV_SETTINGS = configParsed;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export const setConfigEnvironmentVariable = (environmnetName) => {
+  switch (environmnetName) {
     case "dev":
     case "development":
       process.env.NODE_CONFIG_ENV = "development";
@@ -25,23 +44,7 @@ export const setAppEnvironment = () => {
       break;
     default:
       throw new Error(
-        `Incorrect environment ${appEnvironment?.env}, please make sure that you entered a valid env name.`
+        `Incorrect environment ${environmnetName}, please make sure that you entered a valid env name.`
       );
-  }
-};
-
-export const readEnvironmentFiles = () => {
-  try {
-    const configParsed = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          dirname,
-          `../../config/${process.env.NODE_CONFIG_ENV}.json`
-        )
-      )
-    );
-    global.ENV_SETTINGS = configParsed;
-  } catch (e) {
-    throw new Error(e);
   }
 };

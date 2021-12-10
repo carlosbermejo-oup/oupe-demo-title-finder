@@ -1,31 +1,35 @@
 import { manageArgumentVariables } from "./manageArgumentVariables";
-import { Command } from "commander";
 
 let mockExit;
 let mockStdout;
-let writeSpy;
-let commander;
+let mockConsole;
 
 describe("manageArgumentVariables - Basic tests", () => {
   beforeAll(() => {
     mockExit = jest.spyOn(process, "exit").mockImplementation();
-    mockStdout = jest.spyOn(process.stdout, "write").mockImplementation();
-    writeSpy = jest.spyOn(console, "log");
+    mockStdout = jest.spyOn(process.stdout, "write");
+    mockConsole = jest.spyOn(console, "log");
   });
-
-  beforeEach(() => {
-      commander = new Command();
-  })
 
   afterAll(() => {
     jest.restoreAllMocks();
   });
 
-  it("should return the correct environment variables if optional arguments are not used", () => {
+  it("should return a list with the correct environment variables", () => {
     const previousArgs = JSON.parse(JSON.stringify(process.argv));
-    process.argv = ["node", "dummy.js"];
+    process.argv = [
+      "yarn",
+      "start",
+      "--env",
+      "pre",
+      "--cli",
+      "--user",
+      "test",
+      "--pass",
+      "test",
+    ];
 
-    const expected = { env: "dev" };
+    const expected = { env: "pre", cli: true, user: "test", pass: "test" };
     const actual = manageArgumentVariables();
     process.argv = previousArgs;
 
@@ -39,7 +43,7 @@ describe("manageArgumentVariables - Basic tests", () => {
     process.argv = previousArgs;
 
     expect(mockExit).toBeCalled();
-    expect(writeSpy).toHaveBeenCalledWith(
+    expect(mockConsole).toHaveBeenCalledWith(
       "For more information on how to use this program, please visit https://github.com/OUP2/oupe-demo-title-finder#readme"
     );
   });

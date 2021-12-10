@@ -7,12 +7,14 @@
   "type": "module",
   "scripts": {
     "start": "node ./index.js",
+    "start:cli": "node ./index.js --cli",
     "test": "jest",
     "test:dev": "jest --watch"
   },
   "dependencies": {
     "axios": "^0.24.0",
-    "commander": "^8.3.0"
+    "commander": "^8.3.0",
+    "inquirer": "^8.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

@@ -2,11 +2,14 @@ import { manageArgumentVariables } from "./manageArgumentVariables.js";
 import {
   setAppEnvironment,
   readEnvironmentFiles,
+  setConfigEnvironmentVariable,
 } from "./setAppEnvironment.js";
+import { setupConfigurationCli } from "./setupConfigurationCli.js";
 
 jest.mock("./manageArgumentVariables");
+jest.mock("./setupConfigurationCli");
 
-describe("setAppEnvironment", () => {
+describe("setAppEnvironment - Basic tests", () => {
   beforeEach(() => {
     process.env.NODE_CONFIG_ENV = undefined;
     delete global.ENV_SETTINGS;
@@ -14,34 +17,44 @@ describe("setAppEnvironment", () => {
 
   afterAll(() => {
     jest.unmock("./manageArgumentVariables");
+    jest.unmock("./setupConfigurationCli");
+    jest.resetAllMocks();
     delete process.env.NODE_CONFIG_ENV;
   });
 
-  describe("setAppEnvironment - Basic tests", () => {
+  it("should call the asynchronous function correctly.", () => {
+    manageArgumentVariables.mockReturnValue({ env: "dev" });
+    setAppEnvironment().then(
+      () => {
+        expect(setupConfigurationCli).toHaveBeenCalled();
+      },
+      () => null
+    );
+  });
+
+  describe("setConfigEnvironmentVariable - Basic tests", () => {
     it("should set NODE_CONFIG_ENV to development when setting --env to dev.", () => {
-      manageArgumentVariables.mockReturnValue({ env: "dev" });
       const expected = "development";
-      setAppEnvironment();
+      setConfigEnvironmentVariable("dev");
       expect(process.env.NODE_CONFIG_ENV).toBe(expected);
     });
 
     it("should set NODE_CONFIG_ENV to preproduction when setting --env to prepro.", () => {
-      manageArgumentVariables.mockReturnValue({ env: "pre" });
       const expected = "preproduction";
-      setAppEnvironment();
+      setConfigEnvironmentVariable("pre");
       expect(process.env.NODE_CONFIG_ENV).toBe(expected);
     });
 
     it("should set NODE_CONFIG_ENV to production when setting --env to pro.", () => {
-      manageArgumentVariables.mockReturnValue({ env: "pro" });
       const expected = "production";
-      setAppEnvironment();
+      setConfigEnvironmentVariable("pro");
       expect(process.env.NODE_CONFIG_ENV).toBe(expected);
     });
 
     it("should throw an error if the environment set using the flag is invalid.", () => {
-      manageArgumentVariables.mockReturnValue({ env: "test" });
-      expect(() => setAppEnvironment()).toThrow("Incorrect environment test, please make sure that you entered a valid env name.");
+      expect(() => setConfigEnvironmentVariable("test")).toThrow(
+        "Incorrect environment test, please make sure that you entered a valid env name."
+      );
     });
   });
 
@@ -62,8 +75,8 @@ describe("setAppEnvironment", () => {
     });
 
     it("should throw an error if the environment provided is incorrect.", () => {
-        process.env.NODE_CONFIG_ENV = "test";
-        expect(() => readEnvironmentFiles()).toThrow(Error);
-    })
+      process.env.NODE_CONFIG_ENV = "test";
+      expect(() => readEnvironmentFiles()).toThrow(Error);
+    });
   });
 });
