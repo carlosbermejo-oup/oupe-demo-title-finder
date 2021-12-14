@@ -1,0 +1,8 @@
+{
+  "settings": {
+    "urls": {
+      "alfresco_url": "http://82.223.51.220:6081",
+      "premium_url": "https://api.oxfordpremium.oupe.es"
+    }
+  }
+}

@@ -7,17 +7,22 @@
   "type": "module",
   "scripts": {
     "start": "node ./index.js",
+    "start:cli": "node ./index.js --cli",
     "test": "jest",
     "test:dev": "jest --watch"
   },
   "dependencies": {
-    "dotenv": "^10.0.0"
+    "axios": "^0.24.0",
+    "commander": "^8.3.0",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
-    "@babel/node": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
-    "jest": "^27.4.3"
+    "babel-jest": "^27.4.4",
+    "jest": "^27.4.4",
+    "regenerator-runtime": "^0.13.9"
   }
 }
