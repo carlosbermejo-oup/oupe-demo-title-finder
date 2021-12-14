@@ -51,6 +51,12 @@ describe("setAppEnvironment - Basic tests", () => {
       expect(process.env.NODE_CONFIG_ENV).toBe(expected);
     });
 
+    it("should set NODE_CONFIG_ENV to all environments when setting --env to all.", () => {
+      const expected = "all";
+      setConfigEnvironmentVariable("all");
+      expect(process.env.NODE_CONFIG_ENV).toBe(expected);
+    });
+
     it("should throw an error if the environment set using the flag is invalid.", () => {
       expect(() => setConfigEnvironmentVariable("test")).toThrow(
         "Incorrect environment test, please make sure that you entered a valid env name."
@@ -66,7 +72,7 @@ describe("setAppEnvironment - Basic tests", () => {
         settings: {
           urls: {
             alfresco_url: "http://82.223.131.223:8080",
-            premium_url: "https://api.oxfordpremium.dev.oupe.es/check/alfresco",
+            premium_url: "https://api.oxfordpremium.dev.oupe.es",
           },
         },
       };
@@ -77,6 +83,36 @@ describe("setAppEnvironment - Basic tests", () => {
     it("should throw an error if the environment provided is incorrect.", () => {
       process.env.NODE_CONFIG_ENV = "test";
       expect(() => readEnvironmentFiles()).toThrow(Error);
+    });
+
+    it("should return the correct settings if all environments are retrieved.", () => {
+      process.env.NODE_CONFIG_ENV = "all";
+
+      const expected = {
+        settings: {
+          development: {
+            urls: {
+              alfresco_url: "http://82.223.131.223:8080",
+              premium_url: "https://api.oxfordpremium.dev.oupe.es",
+            },
+          },
+          preproduction: {
+            urls: {
+              alfresco_url: "http://82.223.252.223:8080",
+              premium_url: "https://api.oxfordpremium.prepro2.oupe.es",
+            },
+          },
+          production: {
+            urls: {
+              alfresco_url: "http://82.223.51.220:6081",
+              premium_url: "https://api.oxfordpremium.oupe.es",
+            },
+          },
+        },
+      };
+
+      readEnvironmentFiles();
+      expect(global.ENV_SETTINGS).toEqual(expected);
     });
   });
 });

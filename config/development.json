@@ -2,7 +2,7 @@
   "settings": {
     "urls": {
       "alfresco_url": "http://82.223.131.223:8080",
-      "premium_url": "https://api.oxfordpremium.dev.oupe.es/check/alfresco"
+      "premium_url": "https://api.oxfordpremium.dev.oupe.es"
     }
   }
 }

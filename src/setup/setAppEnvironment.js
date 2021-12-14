@@ -7,7 +7,7 @@ import { setupConfigurationCli } from "./setupConfigurationCli.js";
 export const setAppEnvironment = async () => {
   const appEnvironment = manageArgumentVariables();
   await setupConfigurationCli(appEnvironment);
-  setConfigEnvironmentVariable(global.environment);
+  return setConfigEnvironmentVariable(global.environment);
 };
 
 export const readEnvironmentFiles = () => {
@@ -15,32 +15,37 @@ export const readEnvironmentFiles = () => {
     const configParsed = fse.readJSONSync(
       path.resolve(dirname, `../config/${process.env.NODE_CONFIG_ENV}.json`)
     );
-    console.log(configParsed);
     global.ENV_SETTINGS = configParsed;
+    return configParsed;
   } catch (e) {
     throw new Error(e);
   }
 };
 
 export const setConfigEnvironmentVariable = (environmnetName) => {
+  let environmentSettings;
   switch (environmnetName) {
     case "dev":
     case "development":
       process.env.NODE_CONFIG_ENV = "development";
-      readEnvironmentFiles();
-      break;
+      environmentSettings = readEnvironmentFiles();
+      return environmentSettings;
     case "pre":
     case "prepro":
     case "preproduction":
       process.env.NODE_CONFIG_ENV = "preproduction";
-      readEnvironmentFiles();
-      break;
+      environmentSettings = readEnvironmentFiles();
+      return environmentSettings;
     case "pro":
     case "prod":
     case "production":
       process.env.NODE_CONFIG_ENV = "production";
-      readEnvironmentFiles();
-      break;
+      environmentSettings = readEnvironmentFiles();
+      return environmentSettings;
+    case "all":
+      process.env.NODE_CONFIG_ENV = "all";
+      environmentSettings = readEnvironmentFiles();
+      return environmentSettings;
     default:
       throw new Error(
         `Incorrect environment ${environmnetName}, please make sure that you entered a valid env name.`
