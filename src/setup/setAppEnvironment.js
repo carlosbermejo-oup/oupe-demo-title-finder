@@ -42,10 +42,6 @@ export const setConfigEnvironmentVariable = (environmnetName) => {
       process.env.NODE_CONFIG_ENV = "production";
       environmentSettings = readEnvironmentFiles();
       return environmentSettings;
-    case "all":
-      process.env.NODE_CONFIG_ENV = "all";
-      environmentSettings = readEnvironmentFiles();
-      return environmentSettings;
     default:
       throw new Error(
         `Incorrect environment ${environmnetName}, please make sure that you entered a valid env name.`

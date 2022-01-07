@@ -16,12 +16,14 @@ describe("setupConfigurationCli - Basic tests", () => {
 
   beforeEach(() => {
     delete global.environment;
-    delete global.alfresco_username;
-    delete global.alfresco_password;
+    delete global.mysql_username;
+    delete global.mysql_password;
   });
 
   afterAll(() => {
     jest.restoreAllMocks();
+    delete process.env.MYSQL_USER_DEVELOPMENT;
+    delete process.env.MYSQL_PASSWORD_DEVELOPMENT;
   });
 
   it("should call inquirer if the app environment variable is true", async () => {
@@ -46,8 +48,26 @@ describe("setupConfigurationCli - Basic tests", () => {
     const appEnvironment = { cli: true };
     await setupConfigurationCli(appEnvironment);
     expect(global.environment).toBe("development");
-    expect(global.alfresco_username).toBe("user");
-    expect(global.alfresco_password).toBe("test");
+    expect(global.mysql_username).toBe("user");
+    expect(global.mysql_password).toBe("test");
+  });
+
+  it("should use the default username and password if no data is provided to the CLI", async () => {
+    mockInquirer.mockImplementation(() =>
+      Promise.resolve({
+        environmentName: "Development",
+        username: "",
+        password: "",
+      })
+    );
+
+    process.env.MYSQL_USER_DEVELOPMENT = "user";
+    process.env.MYSQL_PASSWORD_DEVELOPMENT = "test";
+    const appEnvironment = { cli: true };
+    await setupConfigurationCli(appEnvironment);
+    expect(global.environment).toBe("development");
+    expect(global.mysql_username).toBe("user");
+    expect(global.mysql_password).toBe("test");
   });
 
   it("should handle an error thrown by inquirer when getting the environment variables.", async () => {

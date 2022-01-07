@@ -1,8 +1,8 @@
-import { retrieveAlfrescoInfo } from "./src/infoRetriever/retrieveAlfrescoInfo.js";
+import { retrieveDemoProducts } from "./src/infoRetriever/retrieveMySQLInfo.js";
 import { setAppEnvironment } from "./src/setup/setAppEnvironment.js";
 
-setAppEnvironment().then((result) => {
-  retrieveAlfrescoInfo(result).then((result) => {
+setAppEnvironment().then((appSettings) => {
+  retrieveDemoProducts(appSettings).then((result) => {
     console.log(result);
   });
 });

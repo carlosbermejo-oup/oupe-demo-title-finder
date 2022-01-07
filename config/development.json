@@ -1,7 +1,7 @@
 {
   "settings": {
     "urls": {
-      "alfresco_url": "http://192.168.30.153:8080",
+      "mysql_host": "192.168.30.92",
       "premium_url": "https://api.oxfordpremium.dev.oupe.es"
     }
   }
