@@ -18,7 +18,7 @@ export const retrieveDemoProducts = async (appSettings) => {
 };
 
 const queryDemoProducts = async (connection) => {
-  const formattedResult = {};
+  const formattedResult = [];
 
   try {
     const demoProducts = await connection.query(
@@ -32,7 +32,7 @@ const queryDemoProducts = async (connection) => {
     );
 
     demoProducts[0].map((row) => {
-      formattedResult[row.idTitulo] = row.nombre;
+      formattedResult.push({ TITULO: row.nombre, IDSIM: row.idTitulo, DEMO: "Sí" });
     });
     return formattedResult;
   } catch (err) {
