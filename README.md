@@ -1,5 +1,14 @@
 # OUPE Demo Title Finder
 
+- [OUPE Demo Title Finder](#oupe-demo-title-finder)
+  - [Usage](#usage)
+  - [Options](#options)
+    - [Example](#example)
+  - [Environment variables](#environment-variables)
+  - [Usage in Automation code](#usage-in-automation-code)
+  - [GitHub Actions CI](#github-actions-ci)
+  - [License](#license)
+
 An automation utility created to generate Excel files containing information about the demo titles available in Alfresco for all environments in OUPE. It allows the user to keep an up-to-date registry of which titles can be used to test Phase 2 of the Promotion to users functionality of [Oxford Premium](https://oxfordpremium.oupe.es/) — both in manual and automated tests.
 
 ## Usage
