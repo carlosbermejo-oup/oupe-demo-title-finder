@@ -1,103 +1,99 @@
-// import fs from "../../utils/fsExtra.cjs";
-// import path from "path";
-// import dirname from "../../utils/dirname.cjs";
-// import xlsx from "exceljs";
+import fs from "../../utils/fsExtra.cjs";
+import path from "path";
+import dirname from "../../utils/dirname.cjs";
+import xlsx from "exceljs";
 
-// export const verifyExcelFileExists = (
-//   fileName = "title-detail-automated.xlsx"
-// ) => {
-//   return fs.existsSync(path.resolve(dirname, `../output/${fileName}`));
-// };
+export const verifyExcelFileExists = (
+  fileName = "title-detail-automated.xlsx"
+) => {
+  return fs.existsSync(path.resolve(dirname, `../output/${fileName}`));
+};
 
-// export const createExcelWorkbook = (
-//   demoProducts,
-//   /* istanbul ignore next */
-//   fileName = "title-detail-automated.xlsx"
-// ) => {
-//   const workbookAlreadyExists = verifyExcelFileExists(fileName);
+export const createExcelWorkbook = async (
+  demoProducts,
+  /* istanbul ignore next */
+  fileName = "title-detail-automated.xlsx"
+) => {
+  const workbookAlreadyExists = verifyExcelFileExists(fileName);
 
-//   let wb;
-//   let sheetNames;
+  let wb;
+  let sheetNames;
 
-//   if (!workbookAlreadyExists) {
-//     wb = new xlsx.Workbook();
-//     wb.creator("Oxford University Press España");
-//     // TODO: I stopped here
-//     sheetNames = wb.SheetNames;
-//   } else {
-//     wb = xlsx.readFile(path.resolve(dirname, `../output/${fileName}`), {
-//       cellStyles: true,
-//     });
-//     sheetNames = wb.Workbook.Sheets.map((sheet) => sheet.name);
-//   }
+  if (!workbookAlreadyExists) {
+    wb = new xlsx.Workbook();
+    wb.creator = "Oxford University Press España";
+    sheetNames = [];
+  } else {
+    wb = new xlsx.Workbook();
+    wb = await wb.xlsx.readFile(path.resolve(dirname, `../output/${fileName}`));
+    sheetNames = wb.worksheets.map((sheet) => sheet.name);
+  }
 
-//   switch (process.env.NODE_CONFIG_ENV) {
-//     case "development":
-//       createWorksheet(wb, sheetNames, "development", demoProducts);
-//       break;
+  switch (process.env.NODE_CONFIG_ENV) {
+    case "development":
+      wb = createWorksheet(wb, sheetNames, "development", demoProducts);
+      await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
+      break;
 
-//     case "preproduction":
-//       createWorksheet(wb, sheetNames, "preproduction", demoProducts);
-//       break;
+    case "preproduction":
+      wb = createWorksheet(wb, sheetNames, "preproduction", demoProducts);
+      await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
+      break;
 
-//     case "production":
-//       createWorksheet(wb, sheetNames, "production", demoProducts);
-//       break;
+    case "production":
+      wb = createWorksheet(wb, sheetNames, "production", demoProducts);
+      await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
+      break;
 
-//     default:
-//       throw new Error(
-//         `Worksheet cannot be created: wrong environment was passed down ${process.env.NODE_CONFIG_ENV}`
-//       );
-//   }
+    default:
+      throw new Error(
+        `Worksheet cannot be created: wrong environment was passed down ${process.env.NODE_CONFIG_ENV}`
+      );
+  }
+};
 
-//   xlsx.writeFile(wb, path.resolve(dirname, `../output/${fileName}`));
-// };
+const createWorksheet = (
+  workbook,
+  sheetNames,
+  environmentName,
+  demoProducts
+) => {
+  if (sheetNames.includes(environmentName)) {
+    const oldWorksheet = workbook.getWorksheet(environmentName);
+    workbook.removeWorksheet(oldWorksheet.id);
+  }
 
-// const createWorksheet = (
-//   workbook,
-//   sheetNames,
-//   environmentName,
-//   demoProducts
-// ) => {
-//   if (!sheetNames.includes(environmentName)) {
-//     workbook.SheetNames.push(environmentName);
-//   }
+  const ws = workbook.addWorksheet(environmentName);
 
-//   const ws = xlsx.utils.json_to_sheet(demoProducts, {
-//     header: [
-//       "TITULO",
-//       "IDSIM",
-//       "POST (Título - ID)",
-//       "CÓDIGO POST",
-//       "DEMO",
-//       "USUARIO",
-//       "AÑADIDO A LA BIBLIOTECA",
-//     ],
-//   });
+  const headerStyle = {
+    fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FF002060" } },
+    font: { color: { argb: "FFFFFFFF" }, bold: "true" },
+    alignment: { vertical: "middle", horizontal: "center" },
+  };
 
-//   ws["!cols"] = [
-//     { wch: 50 },
-//     { wch: 15 },
-//     { wch: 25 },
-//     { wch: 15 },
-//     { wch: 10 },
-//     { wch: 50 },
-//     { wch: 25 },
-//   ];
+  ws.columns = [
+    { header: "TITULO", key: "titleName", width: 50 },
+    { header: "IDSIM", key: "simId", width: 15 },
+    {
+      header: "POST (Título - ID)",
+      key: "postTitle",
+      width: 25,
+    },
+    { header: "CÓDIGO POST", key: "postCode", width: 15 },
+    { header: "DEMO", key: "isDemo", width: 10 },
+    { header: "USUARIO", key: "emailAddress", width: 50 },
+    {
+      header: "AÑADIDO A LA BIBLIOTECA",
+      key: "isInLibrary",
+      width: 25,
+    },
+  ];
 
-//   const headerStyle = {
-//     fill: { patternType: "solid", fgColor: { rgb: "002060" } },
-//     font: { color: { rgb: "ffffff" }, bold: "true" },
-//     alignment: { vertical: "center", horizontal: "center" },
-//   };
+  ["A1", "B1", "C1", "D1", "E1", "F1", "G1"].forEach((cell) => {
+    ws.getCell(cell).style = headerStyle;
+  });
 
-//   ws["A1"].s = headerStyle;
-//   ws["B1"].s = headerStyle;
-//   ws["C1"].s = headerStyle;
-//   ws["D1"].s = headerStyle;
-//   ws["E1"].s = headerStyle;
-//   ws["F1"].s = headerStyle;
-//   ws["G1"].s = headerStyle;
+  ws.addRows(demoProducts);
 
-//   workbook.Sheets[environmentName] = ws;
-// };
+  return workbook;
+};

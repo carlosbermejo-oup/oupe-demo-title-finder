@@ -32,7 +32,7 @@ const queryDemoProducts = async (connection) => {
     );
 
     demoProducts[0].map((row) => {
-      formattedResult.push({ TITULO: row.nombre, IDSIM: row.idTitulo, DEMO: "Sí" });
+      formattedResult.push({ titleName: row.nombre, simId: row.idTitulo, isDemo: "Sí" });
     });
     return formattedResult;
   } catch (err) {
