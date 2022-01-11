@@ -44,8 +44,18 @@ describe("retrieveMySQLInfo - Basic unit tests", () => {
       ]);
 
       const expected = [
-        { isDemo: "Sí", simId: 1, titleName: "Test Product 1" },
-        { isDemo: "Sí", simId: 2, titleName: "Test Product 2" },
+        {
+          isDemo: "Sí",
+          isInLibrary: "No",
+          simId: 1,
+          titleName: "Test Product 1",
+        },
+        {
+          isDemo: "Sí",
+          isInLibrary: "No",
+          simId: 2,
+          titleName: "Test Product 2",
+        },
       ];
       const actual = await retrieveMySQLInfo.retrieveDemoProducts({
         settings: { urls: { mysql_host: "", premium_url: "" } },

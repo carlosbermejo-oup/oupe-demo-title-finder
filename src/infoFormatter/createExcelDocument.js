@@ -11,6 +11,7 @@ export const verifyExcelFileExists = (
 
 export const createExcelWorkbook = async (
   demoProducts,
+  adoptedtitles,
   /* istanbul ignore next */
   fileName = "title-detail-automated.xlsx"
 ) => {
@@ -31,17 +32,35 @@ export const createExcelWorkbook = async (
 
   switch (process.env.NODE_CONFIG_ENV) {
     case "development":
-      wb = createWorksheet(wb, sheetNames, "development", demoProducts);
+      wb = createWorksheet(
+        wb,
+        sheetNames,
+        "development",
+        demoProducts,
+        adoptedtitles
+      );
       await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
       break;
 
     case "preproduction":
-      wb = createWorksheet(wb, sheetNames, "preproduction", demoProducts);
+      wb = createWorksheet(
+        wb,
+        sheetNames,
+        "preproduction",
+        demoProducts,
+        adoptedtitles
+      );
       await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
       break;
 
     case "production":
-      wb = createWorksheet(wb, sheetNames, "production", demoProducts);
+      wb = createWorksheet(
+        wb,
+        sheetNames,
+        "production",
+        demoProducts,
+        adoptedtitles
+      );
       await wb.xlsx.writeFile(path.resolve(dirname, `../output/${fileName}`));
       break;
 
@@ -56,7 +75,8 @@ const createWorksheet = (
   workbook,
   sheetNames,
   environmentName,
-  demoProducts
+  demoProducts,
+  adoptedtitles
 ) => {
   if (sheetNames.includes(environmentName)) {
     const oldWorksheet = workbook.getWorksheet(environmentName);
@@ -81,7 +101,7 @@ const createWorksheet = (
     },
     { header: "CÓDIGO POST", key: "postCode", width: 15 },
     { header: "DEMO", key: "isDemo", width: 10 },
-    { header: "USUARIO", key: "emailAddress", width: 50 },
+    { header: "USUARIO", key: "email", width: 50 },
     {
       header: "AÑADIDO A LA BIBLIOTECA",
       key: "isInLibrary",
@@ -93,7 +113,13 @@ const createWorksheet = (
     ws.getCell(cell).style = headerStyle;
   });
 
+  ws.autoFilter = "A1:G1";
+
   ws.addRows(demoProducts);
+
+  if (adoptedtitles) {
+    ws.addRows(adoptedtitles);
+  }
 
   return workbook;
 };

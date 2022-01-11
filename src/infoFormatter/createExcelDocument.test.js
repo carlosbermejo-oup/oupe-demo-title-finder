@@ -68,10 +68,16 @@ describe("createExcelDocument - Basic unit tests", () => {
       { DEMO: "Sí", IDSIM: 2, TITULO: "Test Product 2" },
     ];
 
+    const adoptedTitles = [
+      { DEMO: "No", IDSIM: 3, TITULO: "Test Product 3" },
+      { DEMO: "No", IDSIM: 4, TITULO: "Test Product 4" },
+    ];
+
     it("should create the Workbook if it doesn't exist already", async () => {
       process.env.NODE_CONFIG_ENV = "development";
       await createExcelDocument.createExcelWorkbook(
         demoProducts,
+        adoptedTitles,
         "title-detail-tests.xlsx"
       );
       const expected = fs.existsSync(
@@ -81,6 +87,7 @@ describe("createExcelDocument - Basic unit tests", () => {
       expect(expected).toBeTruthy();
       expect(mockCreateExcelWorkbook).toHaveBeenCalledWith(
         demoProducts,
+        adoptedTitles,
         "title-detail-tests.xlsx"
       );
 
@@ -96,6 +103,7 @@ describe("createExcelDocument - Basic unit tests", () => {
       process.env.NODE_CONFIG_ENV = "development";
       await createExcelDocument.createExcelWorkbook(
         [{ DEMO: "No", IDSIM: 1, TITULO: "Overwrite Test 1" }],
+        undefined,
         "title-detail-tests.xlsx"
       );
 
@@ -112,6 +120,7 @@ describe("createExcelDocument - Basic unit tests", () => {
       process.env.NODE_CONFIG_ENV = "preproduction";
       await createExcelDocument.createExcelWorkbook(
         demoProducts,
+        adoptedTitles,
         "title-detail-tests.xlsx"
       );
 
@@ -128,6 +137,7 @@ describe("createExcelDocument - Basic unit tests", () => {
       process.env.NODE_CONFIG_ENV = "production";
       await createExcelDocument.createExcelWorkbook(
         demoProducts,
+        adoptedTitles,
         "title-detail-tests.xlsx"
       );
 
@@ -144,6 +154,7 @@ describe("createExcelDocument - Basic unit tests", () => {
       await expect(
         createExcelDocument.createExcelWorkbook(
           demoProducts,
+          adoptedTitles,
           "title-detail-tests.xlsx"
         )
       ).rejects.toThrow(Error);
