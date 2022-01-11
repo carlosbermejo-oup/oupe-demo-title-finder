@@ -1,8 +1,12 @@
 # Node
 node_modules
+.env
 
 # Jest
 coverage
 
 # Yarn
 yarn-error.log
+
+# Output
+output

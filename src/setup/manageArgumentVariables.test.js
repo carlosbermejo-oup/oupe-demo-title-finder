@@ -29,7 +29,12 @@ describe("manageArgumentVariables - Basic tests", () => {
       "test",
     ];
 
-    const expected = { env: "pre", cli: true, user: "test", pass: "test" };
+    const expected = {
+      env: "pre",
+      cli: true,
+      user: "test",
+      pass: "test",
+    };
     const actual = manageArgumentVariables();
     process.argv = previousArgs;
 

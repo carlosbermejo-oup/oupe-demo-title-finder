@@ -4,15 +4,15 @@ export const manageArgumentVariables = () => {
   program
     .option(
       "-e, --env <env>",
-      'Environment from which to retrieve the Alfresco informatiion. By default it\'s set to "dev".',
+      'Environment from which to retrieve the MySQL informatiion. By default it\'s set to "dev".',
       "dev"
     )
     .option(
       "--cli",
       "Configure the Title Finder using a command line interface instead of manually entering arguments"
     )
-    .option("-u, --user, --username <username>", "Alfresco username.")
-    .option("-p, --pass, --password <password>", "Alfresco password.")
+    .option("-u, --user, --username <username>", "MySQL username.")
+    .option("-p, --pass, --password <password>", "MySQL password.")
     .parse();
 
   program.on("--help", () => {
