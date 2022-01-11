@@ -10,6 +10,7 @@ describe("setupConfigurationCli - Basic tests", () => {
         environmentName: "Development",
         username: "user",
         password: "test",
+        email: "test@test.com",
       })
     );
   });
@@ -18,6 +19,7 @@ describe("setupConfigurationCli - Basic tests", () => {
     delete global.environment;
     delete global.mysql_username;
     delete global.mysql_password;
+    delete global.premium_email;
   });
 
   afterAll(() => {
@@ -50,6 +52,7 @@ describe("setupConfigurationCli - Basic tests", () => {
     expect(global.environment).toBe("development");
     expect(global.mysql_username).toBe("user");
     expect(global.mysql_password).toBe("test");
+    expect(global.premium_email).toBe("test@test.com");
   });
 
   it("should use the default username and password if no data is provided to the CLI", async () => {
@@ -68,6 +71,21 @@ describe("setupConfigurationCli - Basic tests", () => {
     expect(global.environment).toBe("development");
     expect(global.mysql_username).toBe("user");
     expect(global.mysql_password).toBe("test");
+  });
+
+  it("should return undefined for the Oxford Premium email if no data is provided to the CLI", async () => {
+    mockInquirer.mockImplementation(() =>
+      Promise.resolve({
+        environmentName: "Development",
+        username: "",
+        password: "",
+        email: "",
+      })
+    );
+
+    const appEnvironment = { cli: true };
+    await setupConfigurationCli(appEnvironment);
+    expect(global.premium_email).toBe(undefined);
   });
 
   it("should handle an error thrown by inquirer when getting the environment variables.", async () => {

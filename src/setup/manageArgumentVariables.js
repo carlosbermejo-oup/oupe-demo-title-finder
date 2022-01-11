@@ -13,6 +13,10 @@ export const manageArgumentVariables = () => {
     )
     .option("-u, --user, --username <username>", "MySQL username.")
     .option("-p, --pass, --password <password>", "MySQL password.")
+    .option(
+      "-e, --email <email>",
+      "Oxford Premium user whose adoptions will be queried."
+    )
     .parse();
 
   program.on("--help", () => {

@@ -1,9 +1,12 @@
 import { createExcelWorkbook } from "./src/infoFormatter/createExcelDocument.js";
-import { retrieveDemoProducts } from "./src/infoRetriever/retrieveMySQLInfo.js";
+import {
+  retrieveAdoptedTitles,
+  retrieveDemoProducts,
+} from "./src/infoRetriever/retrieveMySQLInfo.js";
 import { setAppEnvironment } from "./src/setup/setAppEnvironment.js";
 
-setAppEnvironment().then((appSettings) => {
-  retrieveDemoProducts(appSettings).then((demoProducts) => {
-    createExcelWorkbook(demoProducts);
-  });
+setAppEnvironment().then(async (appSettings) => {
+  const demoProducts = await retrieveDemoProducts(appSettings);
+  const adoptedtitles = await retrieveAdoptedTitles(appSettings);
+  createExcelWorkbook(demoProducts, adoptedtitles);
 });

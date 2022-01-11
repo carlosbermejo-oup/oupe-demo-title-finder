@@ -17,8 +17,14 @@ export const setupConfigurationCli = async (appEnvironment) => {
     },
     {
       type: "password",
-      message: "Enter your MySQL password",
+      message: "Enter your MySQL password:",
       name: "password",
+    },
+    {
+      type: "input",
+      name: "email",
+      message:
+        "Enter the Oxford Premium user whose adoptions you want to query. Leave empty to only get demo titles:",
     },
   ];
 
@@ -43,6 +49,12 @@ export const setupConfigurationCli = async (appEnvironment) => {
           ];
       } else {
         global.mysql_password = answers.password;
+      }
+
+      if (answers.email === "") {
+        global.premium_email = undefined;
+      } else {
+        global.premium_email = answers.email;
       }
     } catch (error) {
       throw new Error(`Configurator settings could not be set: ${error}`);
