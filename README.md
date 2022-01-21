@@ -33,8 +33,7 @@ To have the application guide you in configuring the settings, execute the follo
 ```
 yarn start:cli
 ```
-![CLI Example](./assets/cli-example.jpg)
-
+  
 The application will ask you questions about the environment from which to recover the information and the database credentials.
 
 To avoid having to enter the MySQL username and password, you can create a .env file with the following content:
@@ -62,8 +61,6 @@ The alternative is to provide the parameters manually on execution. The command 
 ```
 yarn start --env <env> --user <MySQL Username> --pass <MySQL Password> --email <>
 ```
-
-![CLI Empty credentials](./assets/cli-credentials.jpg)
 
 * **--env**: the environment from which to retrieve the information. Possible values are **dev**, **pre** and **pro**. Can also be used as *-e*
 * **--user**: the MySQL username. Can also be used as *-u* or *--username*.
