@@ -1,4 +1,5 @@
 import { withMySQLConnection } from "../setup/databaseConnection.js";
+import { retrieveWordpressPosts } from "./retrieveWordpressPosts.js";
 import { isMySQLUp } from "./verifyConnection.js";
 
 export const retrieveDemoProducts = async (appSettings) => {
@@ -6,11 +7,17 @@ export const retrieveDemoProducts = async (appSettings) => {
   let resultTitlesInLibrary;
 
   const mySQLStatus = await isMySQLUp(appSettings);
+  const wordPressPosts = await retrieveWordpressPosts();
 
   if (mySQLStatus) {
     await withMySQLConnection(appSettings, async (connection) => {
       resultDemoProducts = await queryDemoProducts(connection);
     });
+
+    resultDemoProducts = mapWordPressPostExcerptToTitle(
+      wordPressPosts,
+      resultDemoProducts
+    );
 
     /* istanbul ignore next */
     if (global.premium_email) {
@@ -41,12 +48,18 @@ export const retrieveAdoptedTitles = async (appSettings) => {
   let resultAdoptedTitles;
   let resultTitlesInLibrary;
   const mySQLStatus = await isMySQLUp(appSettings);
+  const wordPressPosts = await retrieveWordpressPosts();
 
   if (global.premium_email) {
     if (mySQLStatus) {
       await withMySQLConnection(appSettings, async (connection) => {
         resultAdoptedTitles = await queryAdoptedTitles(connection);
       });
+
+      resultAdoptedTitles = mapWordPressPostExcerptToTitle(
+        wordPressPosts,
+        resultAdoptedTitles
+      );
 
       await withMySQLConnection(appSettings, async (connection) => {
         resultTitlesInLibrary = await queryTitlesInLibrary(connection);
@@ -164,4 +177,24 @@ const queryTitlesInLibrary = async (connection) => {
   } catch (err) {
     throw new Error(`Error trying to query the DB: ${err}`);
   }
+};
+
+/* istanbul ignore next */
+export const mapWordPressPostExcerptToTitle = (wordPressPosts, titles) => {
+  titles.map((title) => {
+    wordPressPosts.map((post) => {
+      if (post.excerpt.rendered.includes(title.simId)) {
+        title.postTitle =
+          (title.postTitle ? title.postTitle : "") +
+          `${post.title.rendered} - ${post.id}\n`;
+        title.postCode =
+          (title.postCode ? title.postCode : "") +
+          `${post.excerpt.rendered.split("<p>")[1].split("</p>")[0]}\n`;
+        title.moreInformationUrl =
+          (title.moreInformationUrl ? title.moreInformationUrl : "") +
+          `${post?.excerpt?.rendered?.split("@")[1].split("</p>")[0]}\n`;
+      }
+    });
+  });
+  return titles;
 };

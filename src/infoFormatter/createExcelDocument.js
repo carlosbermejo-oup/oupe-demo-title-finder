@@ -92,34 +92,67 @@ const createWorksheet = (
   };
 
   ws.columns = [
-    { header: "TITULO", key: "titleName", width: 50 },
-    { header: "IDSIM", key: "simId", width: 15 },
+    {
+      header: "TITULO",
+      key: "titleName",
+      width: 50,
+      style: { alignment: { wrapText: true } },
+    },
+    {
+      header: "IDSIM",
+      key: "simId",
+      width: 15,
+      style: { alignment: { wrapText: true } },
+    },
     {
       header: "POST (Título - ID)",
       key: "postTitle",
       width: 25,
+      style: { alignment: { wrapText: true } },
     },
-    { header: "CÓDIGO POST", key: "postCode", width: 15 },
-    { header: "DEMO", key: "isDemo", width: 10 },
-    { header: "USUARIO", key: "email", width: 50 },
+    {
+      header: "CÓDIGO POST",
+      key: "postCode",
+      width: 50,
+      style: { alignment: { wrapText: true } },
+    },
+    {
+      header: "URL MÁS INFORMATION",
+      key: "moreInformationUrl",
+      width: 50,
+      style: { alignment: { wrapText: true } },
+    },
+    {
+      header: "DEMO",
+      key: "isDemo",
+      width: 10,
+      style: { alignment: { wrapText: true } },
+    },
+    {
+      header: "USUARIO",
+      key: "email",
+      width: 50,
+      style: { alignment: { wrapText: true } },
+    },
     {
       header: "AÑADIDO A LA BIBLIOTECA",
       key: "isInLibrary",
       width: 25,
+      style: { alignment: { wrapText: true } },
     },
   ];
 
-  ["A1", "B1", "C1", "D1", "E1", "F1", "G1"].forEach((cell) => {
+  ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"].forEach((cell) => {
     ws.getCell(cell).style = headerStyle;
   });
 
-  ws.autoFilter = "A1:G1";
-
-  ws.addRows(demoProducts);
+  ws.autoFilter = "A1:H1";
 
   if (adoptedtitles) {
     ws.addRows(adoptedtitles);
   }
+
+  ws.addRows(demoProducts);
 
   return workbook;
 };

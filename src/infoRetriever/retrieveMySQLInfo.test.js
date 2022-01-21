@@ -1,9 +1,11 @@
 import * as retrieveMySQLInfo from "./retrieveMySQLInfo";
+import * as retrieveWordpressPosts from "./retrieveWordpressPosts";
 import * as verifyConnection from "./verifyConnection";
 
 jest.mock("./verifyConnection");
 
 const mockQuery = jest.fn();
+let mockRetrieveWordpressPosts;
 
 jest.mock("mysql2/promise", () => ({
   createConnection: () => ({
@@ -12,6 +14,45 @@ jest.mock("mysql2/promise", () => ({
     end: () => undefined,
   }),
 }));
+
+const mockWordpressPost = [
+  {
+    id: 1,
+    date: "2022-01-11T13:51:52",
+    date_gmt: "2022-01-11T12:51:52",
+    guid: {
+      rendered: "https://help.oupe.es/?p=1",
+    },
+    modified: "2022-01-11T13:51:52",
+    modified_gmt: "2022-01-11T12:51:52",
+    slug: "webinar-mediation-in-english-file",
+    status: "publish",
+    type: "post",
+    link: "https://help.oupe.es/test/",
+    title: {
+      rendered: "TEST",
+    },
+    content: {
+      rendered: "\n<p>This is a test</p>\n",
+      protected: false,
+    },
+    excerpt: {
+      rendered: "<p>This is a test</p>\n",
+      protected: false,
+    },
+    author: 1,
+    featured_media: 1,
+    comment_status: "closed",
+    ping_status: "closed",
+    sticky: false,
+    template: "",
+    format: "standard",
+    meta: [],
+    categories: [2],
+    tags: [1],
+    _links: { mock: true },
+  },
+];
 
 describe("retrieveMySQLInfo - Basic unit tests", () => {
   describe("retrieveDemoProducts - Basic unit tests", () => {
@@ -22,9 +63,18 @@ describe("retrieveMySQLInfo - Basic unit tests", () => {
         retrieveMySQLInfo,
         "retrieveDemoProducts"
       );
+
+      mockRetrieveWordpressPosts = jest.spyOn(
+        retrieveWordpressPosts,
+        "retrieveWordpressPosts"
+      );
     });
 
-    it("should try to retrieve MySQL info only if connection to MySQL is correct", async () => {
+    afterAll(() => {
+      jest.resetAllMocks();
+    });
+
+    it("should retrieve MySQL info only if connection to MySQL is correct", async () => {
       verifyConnection.isMySQLUp.mockReturnValueOnce(true);
       mockQuery.mockImplementationOnce(async (query) => [
         [
@@ -57,6 +107,8 @@ describe("retrieveMySQLInfo - Basic unit tests", () => {
           titleName: "Test Product 2",
         },
       ];
+
+      mockRetrieveWordpressPosts.mockResolvedValueOnce(mockWordpressPost);
       const actual = await retrieveMySQLInfo.retrieveDemoProducts({
         settings: { urls: { mysql_host: "", premium_url: "" } },
       });
