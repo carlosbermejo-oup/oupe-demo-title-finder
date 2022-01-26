@@ -116,6 +116,7 @@ describe("retrieveMySQLInfo - Basic unit tests", () => {
     });
 
     it("should throw an error if the MySQL DB is down", async () => {
+      jest.setTimeout(8000);
       verifyConnection.isMySQLUp.mockReturnValueOnce(false);
 
       await expect(
