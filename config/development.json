@@ -5,7 +5,8 @@
       "premium_url": "https://api.oxfordpremium.dev.oupe.es"
     },
     "categories": {
-      "promo_home": 656
+      "promo_home": 656,
+      "promo_title_detail": 657
     }
   }
 }

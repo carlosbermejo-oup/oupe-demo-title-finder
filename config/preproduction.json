@@ -5,7 +5,8 @@
       "premium_url": "https://api.oxfordpremium.prepro2.oupe.es"
     },
     "categories": {
-      "promo_home": 679
+      "promo_home": 679,
+      "promo_title_detail": 680
     }
   }
 }

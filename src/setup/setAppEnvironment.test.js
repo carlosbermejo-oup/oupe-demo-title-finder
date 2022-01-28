@@ -70,6 +70,7 @@ describe("setAppEnvironment - Basic tests", () => {
           },
           categories: {
             promo_home: 656,
+            promo_title_detail: 657,
           },
         },
       };

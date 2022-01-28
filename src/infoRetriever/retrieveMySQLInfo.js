@@ -184,11 +184,9 @@ export const mapWordPressPostExcerptToTitle = (wordPressPosts, titles) => {
   titles.map((title) => {
     wordPressPosts.map((post) => {
       if (
-        post.excerpt.rendered.includes("@") &&
-        post.excerpt.rendered.split("@")[0].includes(title.simId) &&
-        post?.categories.includes(
-          global.ENV_SETTINGS.settings.categories.promo_home
-        )
+        post.excerpt.rendered.includes("@") && post.excerpt.rendered.split("@")[0].includes(title.simId) &&
+        (post?.categories.includes(global.ENV_SETTINGS.settings.categories.promo_home) ||
+          post?.categories.includes(global.ENV_SETTINGS.settings.categories.promo_title_detail))
       ) {
         title.postTitle =
           (title.postTitle ? title.postTitle : "") +
