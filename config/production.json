@@ -3,6 +3,9 @@
     "urls": {
       "mysql_host": "192.168.1.95",
       "premium_url": "https://api.oxfordpremium.oupe.es"
+    },
+    "categories": {
+      "promo_home": 682
     }
   }
 }

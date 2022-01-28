@@ -68,6 +68,9 @@ describe("setAppEnvironment - Basic tests", () => {
             mysql_host: "192.168.30.92",
             premium_url: "https://api.oxfordpremium.dev.oupe.es",
           },
+          categories: {
+            promo_home: 656,
+          },
         },
       };
       readEnvironmentFiles();
