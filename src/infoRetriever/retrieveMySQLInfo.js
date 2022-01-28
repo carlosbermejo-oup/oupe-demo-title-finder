@@ -183,7 +183,13 @@ const queryTitlesInLibrary = async (connection) => {
 export const mapWordPressPostExcerptToTitle = (wordPressPosts, titles) => {
   titles.map((title) => {
     wordPressPosts.map((post) => {
-      if ( post.excerpt.rendered.includes("@") && post.excerpt.rendered.split("@")[0].includes(title.simId)) {
+      if (
+        post.excerpt.rendered.includes("@") &&
+        post.excerpt.rendered.split("@")[0].includes(title.simId) &&
+        post?.categories.includes(
+          global.ENV_SETTINGS.settings.categories.promo_home
+        )
+      ) {
         title.postTitle =
           (title.postTitle ? title.postTitle : "") +
           `${post.title.rendered} - ${post.id}\n`;
@@ -193,7 +199,11 @@ export const mapWordPressPostExcerptToTitle = (wordPressPosts, titles) => {
         title.moreInformationUrl =
           (title.moreInformationUrl ? title.moreInformationUrl : "") +
           // `${post?.excerpt?.rendered?.split("@")[1].split("</p>")[0]}\n`;
-          `${!post?.excerpt?.rendered?.includes("PM:") ? post?.excerpt?.rendered?.split("@")[1].split("</p>")[0] + "\n" : ""}`;
+          `${
+            !post?.excerpt?.rendered?.includes("PM:")
+              ? post?.excerpt?.rendered?.split("@")[1].split("</p>")[0] + "\n"
+              : ""
+          }`;
       }
     });
   });
